@@ -27,9 +27,6 @@ typedef struct hv5812_controller {
 	uint8_t data_in;
 	uint8_t clock;
 	uint8_t strobe;
-
-	/* HV5812 controller can drive two tubes */
-	tube_t *tube[2];
 } hv5812_controller_t;
 
 typedef struct grid {
@@ -37,7 +34,6 @@ typedef struct grid {
 	void *port;
 	uint8_t pin;
 
-	// struct hv5812_controller *controller;
 	hv5812_controller_t *controller;
 	uint32_t c_data;
 
@@ -45,8 +41,10 @@ typedef struct grid {
 } grid_t;
 
 typedef struct display {
+	// The tubes in visual order (i.e. left-to-right)
 	uint8_t tube_len;
 	tube_t **tube;
+	// The grid circuits.  Any order should be OK.
 	uint8_t grid_len;
 	grid_t **grid;
 } display_t;
@@ -59,6 +57,9 @@ void send_controller(hv5812_controller_t *controller, uint32_t data);
 
 void render_tubechar(uint32_t *c_data, tube_t *tube, tubechar_t c);
 
-void refresh(display_t *display);
+void refresh_grid(grid_t *prev_grid, grid_t *grid);
+
+void grid_on(grid_t *grid);
+void grid_off(grid_t *grid);
 
 #endif

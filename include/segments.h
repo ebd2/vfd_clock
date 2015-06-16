@@ -1,5 +1,5 @@
 #ifndef SEGMENTS_H
-#define SEGMENTS_H 1
+#define SEGMENTS_H
 
 typedef enum {
 	SS_TOP = 0,
@@ -11,7 +11,6 @@ typedef enum {
 	SS_MID = 6,
 	SS_VERT = 7,
 	SS_DOT = 8,
-	SS_MAX = SS_DOT,
 } segment_shift;
 
 typedef enum {
@@ -25,7 +24,6 @@ typedef enum {
 	S_VERT = 1 << SS_VERT,
 	S_DOT = 1 << SS_DOT,
 } segments;
-
 
 # define NUM_SEGMENTS 9
 

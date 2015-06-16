@@ -17,7 +17,6 @@ hv5812_controller_t controller0 = {
 	PORTB0,
 	PORTB1,
 	PORTB2,
-	{ &tube0, NULL, }
 };
 
 grid_t grid0 = {
@@ -25,21 +24,22 @@ grid_t grid0 = {
 	PORTB3,
 	&controller0,
 	0,
+
 	{ &tube0, NULL },
 };
 
-tube_t *tubes[] = { &tube0 };
-grid_t *grids[] = { &grid0 };
+tube_t *tubes[] = { &tube0, NULL };
+grid_t *grids[] = { &grid0, NULL };
 
 display_t clock_display = {
-	1, NULL,
-	1, NULL,
+	sizeof(tubes) / sizeof(tubes[0]),
+	tubes,
+	sizeof(grids) / sizeof(grids[0]),
+	grids,
 };
 
 void clock_init()
 {
 	tube0.controller = &controller0;
 	tube0.grid = &grid0;
-	clock_display.tube = tubes;
-	clock_display.grid = grids;
 }
