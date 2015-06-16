@@ -1,8 +1,10 @@
 DEPTH = ..
 
-include $(DEPTH)/Makefile.inc
-
 BIN := test
+
+.PHONY: run
+run: $(BIN)
+	./$(BIN)
 
 CPPFLAGS += -I. -I./mock/include
 CFLAGS += -Wno-unused-function -g
@@ -12,18 +14,12 @@ VPATH += ./mock/src
 
 TEST_OBJ := avrio.o delay.o main.o 
 
-OBJ := $(TEST_OBJ) $(COMMON_OBJ) 
+OBJ = $(TEST_OBJ) $(COMMON_OBJ) 
 
-run: $(BIN)
-	./$(BIN)
+include $(DEPTH)/include.mk
 
 $(BIN): $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $^
-
-include $(OBJ:.o=.d)
-
-%.d: %.c
-	$(CC) $(CPPFLAGS) -MM -MG $^ | sed -e 's@\(.*\)\.o:@\1.d \1.o:@' >$@
 
 .PHONY: clean
 clean:

@@ -10,3 +10,8 @@ CPPFLAGS += -I $(DEPTH)/include
 
 CFLAGS += -Wall -Werror
 
+include $(OBJ:.o=.d)
+
+%.d: %.c
+	$(CC) $(CPPFLAGS) -MM -MG $^ | sed -e 's@\(.*\)\.o:@\1.d \1.o:@' >$@
+
