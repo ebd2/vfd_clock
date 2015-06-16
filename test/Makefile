@@ -10,14 +10,21 @@ LDFLAGS += -lcheck
 
 VPATH += ./mock/src
 
-TEST_OBJS=avrio.c delay.o main.o 
+TEST_OBJ := avrio.o delay.o main.o 
+
+OBJ := $(TEST_OBJ) $(COMMON_OBJ) 
 
 run: $(BIN)
 	./$(BIN)
 
-$(BIN): $(COMMON_OBJS) $(TEST_OBJS)
+$(BIN): $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $^
+
+include $(OBJ:.o=.d)
+
+%.d: %.c
+	$(CC) $(CPPFLAGS) -MM -MG $^ | sed -e 's@\(.*\)\.o:@\1.d \1.o:@' >$@
 
 .PHONY: clean
 clean:
-	-rm -f $(BIN) *.o
+	-rm -f $(BIN) *.o *.d

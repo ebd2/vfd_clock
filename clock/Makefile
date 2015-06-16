@@ -2,8 +2,10 @@ DEPTH = ..
 
 include $(DEPTH)/Makefile.inc
 
-BIN=vfd_characters
-CLOCK_OBJS=main.o
+BIN = vfd_characters
+CLOCK_OBJ := main.o
+
+OBJ := $(COMMON_OBJ) $(CLOCK_OBJ)
 
 MCU=atmega328
 PROGRAMMER=usbtiny
@@ -18,7 +20,7 @@ LDFLAGS += -O1 -mmcu=$(MCU)
 $(BIN).hex: $(BIN).elf
 	$(OBJCOPY) -O ihex -R .eeprom $< $@
 
-$(BIN).elf: $(COMMON_OBJS) $(CLOCK_OBJS)
+$(BIN).elf: $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 install: $(BIN).hex
@@ -26,4 +28,4 @@ install: $(BIN).hex
 
 .PHONY: clean
 clean:
-	-rm -f $(BIN).elf $(BIN).hex $(OBJS) *.o
+	-rm -f $(BIN).elf $(BIN).hex $(OBJ) *.o
