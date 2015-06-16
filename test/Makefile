@@ -14,6 +14,7 @@ VPATH += ./mock/src
 
 TEST_OBJ := avrio.o delay.o main.o 
 
+# Must be recursively expanded for the dependencies rules in include.mk to work
 OBJ = $(TEST_OBJ) $(COMMON_OBJ) 
 
 include $(DEPTH)/include.mk
@@ -23,4 +24,4 @@ $(BIN): $(OBJ)
 
 .PHONY: clean
 clean:
-	-rm -f $(BIN) *.o *.d
+	-rm -f $(BIN) *.o

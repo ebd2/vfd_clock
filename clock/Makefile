@@ -5,9 +5,11 @@ BIN = vfd_characters
 .PHONY: all
 all: $(BIN).hex
 
+# Variables defining the hardware in use
 MCU=atmega328
 PROGRAMMER=usbtiny
 
+# Hardware specific tools
 CC=avr-gcc
 OBJCOPY=avr-objcopy
 
@@ -15,7 +17,11 @@ CPPFLAGS += -I.
 CFLAGS += -O1 -DF_CPU=1000000UL -mmcu=$(MCU)
 LDFLAGS += -O1 -mmcu=$(MCU)
 
+# Clock-specific object files.
 CLOCK_OBJ := main.o
+
+# All of the object files for the clock.  Must be recursively expanded because
+# $(COMMON_OBJ) is defined in include.mk, which is included below.
 OBJ = $(COMMON_OBJ) $(CLOCK_OBJ)
 
 include $(DEPTH)/include.mk
@@ -31,4 +37,4 @@ install: $(BIN).hex
 
 .PHONY: clean
 clean:
-	-rm -f $(BIN).elf $(BIN).hex $(OBJ) *.o *.d
+	-rm -f $(BIN).elf $(BIN).hex $(OBJ) *.o
