@@ -27,6 +27,7 @@ void test_tube(tube_t *tube)
 	for (i = 0; i < sizeof(tube->seg_map) / sizeof(*tube->seg_map); ++i) {
 		c_data = 1L << tube->seg_map[i];
 		send_controller(controller, c_data);
+		strobe_controller(controller);
 		_delay_ms(1000.0);
 	}
 
@@ -57,11 +58,15 @@ void send_controller(hv5812_controller_t *controller, uint32_t data)
 
 	CLEAR_PIN(c_port_state, controller->clock);
 	CLEAR_PIN(c_port_state, controller->data_in);
+}
 
-	SET_PIN(c_port_state, controller->strobe);
-	write_port(controller->port, c_port_state);
-	CLEAR_PIN(c_port_state, controller->strobe);
-	write_port(controller->port, c_port_state);
+void strobe_controller(hv5812_controller_t *c)
+{
+	uint8_t c_port_state = read_port(c->port);
+	SET_PIN(c_port_state, c->strobe);
+	write_port(c->port, c_port_state);
+	CLEAR_PIN(c_port_state, c->strobe);
+	write_port(c->port, c_port_state);
 }
 
 void render_tubechar(uint32_t *c_data, tube_t *tube, tubechar_t c)
@@ -76,8 +81,9 @@ void render_tubechar(uint32_t *c_data, tube_t *tube, tubechar_t c)
 }
 
 void refresh_grid(grid_t *prev_grid, grid_t *grid) {
-	grid_off(prev_grid);
 	send_controller(grid->controller, grid->c_data);
+	grid_off(prev_grid);
+	strobe_controller(grid->controller);
 	grid_on(grid);
 }
 

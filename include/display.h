@@ -47,6 +47,8 @@ typedef struct display {
 	// The grid circuits.  Any order should be OK.
 	uint8_t grid_len;
 	grid_t **grid;
+	// the index of the currently active grid
+	uint8_t active_grid;
 } display_t;
 
 void test_tube(tube_t *tube);
@@ -54,6 +56,7 @@ void test_tube(tube_t *tube);
 void display(display_t *display, char *s, off_t index);
 
 void send_controller(hv5812_controller_t *controller, uint32_t data);
+void strobe_controller(hv5812_controller_t *c);
 
 void render_tubechar(uint32_t *c_data, tube_t *tube, tubechar_t c);
 

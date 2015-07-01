@@ -1,3 +1,4 @@
+#include <avr/interrupt.h>
 #include <avr/io.h>
 #include <util/delay.h>
 #include <string.h>
@@ -24,19 +25,16 @@ void count()
 
 	c_data = 0xfffff;
 	tube0.grid->c_data = c_data;
-	refresh_grid(tube0.grid, tube0.grid);
 	_delay_ms(1000.0);
 
 	c_data = 0;
 	tube0.grid->c_data = c_data;
-	refresh_grid(tube0.grid, tube0.grid);
 	_delay_ms(1000.0);
 
 	for (i = 0; i < DIGITS_LEN; ++i) {
 		c_data = 0;
 		render_tubechar(&c_data, &tube0, DIGITS[i]);
 		tube0.grid->c_data = c_data;
-		refresh_grid(tube0.grid, tube0.grid);
 		_delay_ms(1000.0);
 	}
 
@@ -44,7 +42,6 @@ void count()
 		c_data = 0;
 		render_tubechar(&c_data, &tube0, LETTERS[i]);
 		tube0.grid->c_data = c_data;
-		refresh_grid(tube0.grid, tube0.grid);
 		_delay_ms(1000.0);
 	}
 }
@@ -61,7 +58,6 @@ void say(char *what)
 		}
 		tube0.grid->c_data = 0;
 		render_tubechar(&tube0.grid->c_data, &tube0, tc);
-		refresh_grid(tube0.grid, tube0.grid);
 		_delay_ms(1000.0);
 	}
 }
@@ -70,15 +66,16 @@ int main()
 {
 	clock_init();
 	ioinit();
+	sei();
 	send_controller(&controller0, 0);
-	_delay_ms(3000.0);
-	say("Hello World");
-	grid_off(&grid0);
 
-	_delay_ms(2000.0);
+	say("Hello World");
+	grid0.c_data = 0;
+
+	_delay_ms(1000.0);
 
 	count();
-	grid_off(&grid0);
+	grid0.c_data = 0;
 
 	for(;;) {
 		PORTC = 0xFF;

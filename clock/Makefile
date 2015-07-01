@@ -14,7 +14,7 @@ CC=avr-gcc
 OBJCOPY=avr-objcopy
 
 CPPFLAGS += -I.
-CFLAGS += -O1 -DF_CPU=1000000UL -mmcu=$(MCU)
+CFLAGS += -O1 -DF_CPU=8000000UL -mmcu=$(MCU) -g
 LDFLAGS += -O1 -mmcu=$(MCU)
 
 # Clock-specific object files.

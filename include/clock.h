@@ -9,6 +9,7 @@ extern tube_t tube0;
 extern hv5812_controller_t controller0;
 
 extern grid_t grid0;
+extern grid_t grid1;
 
 /* collections of tubes and grids that make up the clock */
 extern tube_t *tubes[];
