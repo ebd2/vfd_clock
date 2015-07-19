@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <check.h>
 
+#include "DS1307_test.h"
 #include "display_test.h"
 #include "bcd_test.h"
 
 typedef Suite *(*suite_provider)();
 
 suite_provider suite_providers[] = {
+	DS1307_suite,
 	display_suite,
 	bcd_suite,
 };

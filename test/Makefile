@@ -13,10 +13,11 @@ LDFLAGS += -lcheck
 VPATH += ./mock/src
 
 TEST_OBJ := main.o \
-	delay.o \
-	avrio.o \
 	display_test.o \
 	bcd_test.o \
+	DS1307_test.o \
+	delay.o \
+	avrio.o \
 	bcd.o \
 	i2c.o
 

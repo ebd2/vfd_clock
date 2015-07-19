@@ -112,7 +112,7 @@ void DS1307_to_raw_time(uint8_t raw_time[7], uint16_t century,
 	if (tm->tm_hour_mode == HOUR_MODE_12) {
 		raw_time[2] = to_bcd(tm->tm_hour, 0x1f);
 		raw_time[2] |= HOUR_MODE_FLAG;
-		raw_time[2] |= tm->tm_am_pm ? 0 : PM_FLAG;
+		raw_time[2] |= tm->tm_am_pm == AM ? 0 : PM_FLAG;
 	} else {
 		raw_time[2] = to_bcd(tm->tm_hour, 0x3f);
 	}

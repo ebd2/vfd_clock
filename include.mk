@@ -1,7 +1,8 @@
 COMMON_OBJ := display.o \
 	tubechars.o \
 	clock.o \
-	bcd.o
+	bcd.o \
+	DS1307.o
 
 # Add the common source directory to VPATH
 VPATH += $(DEPTH)/src
