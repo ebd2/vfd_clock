@@ -5,6 +5,10 @@
 
 #define PORTB_ADDR ((void *) 0x05)
 
+#ifndef PORTB4
+#define PORTB4 4
+#endif
+
 tube_t tube0 = {
 	NULL,
 	NULL,
@@ -66,7 +70,7 @@ grid_t grid1 = {
 tube_t *tubes[] = { &tube0, &tube1, &tube2, &tube3 };
 grid_t *grids[] = { &grid0, &grid1 };
 
-display_t display0 = {
+display_t clock_display = {
 	sizeof(tubes) / sizeof(tubes[0]),
 	tubes,
 	sizeof(grids) / sizeof(grids[0]),
@@ -90,6 +94,7 @@ void clock_init()
 	// DDRD |= (1 << DDD5);
 	// DDRD |= (1 << DDD6);
 
+	#ifdef AVR
 	// Set for fast PWM mode
 	TCCR0A |= (1 << WGM01) | (1 << WGM00);
 	// set prescaler to 64 and enable timer0
@@ -97,15 +102,19 @@ void clock_init()
 
 	// Enable the overflow interrupt
 	TIMSK0 |= (1 << TOIE0);
+	#endif
 }
 
+#ifdef AVR
 ISR(TIMER0_OVF_vect) {
 	TIFR0 |= (1 << TOV0);
 
-	uint8_t next_grid = (display0.active_grid + 1) % display0.grid_len;
+	uint8_t next_grid = (clock_display.active_grid + 1)
+			% clock_display.grid_len;
 
-	refresh_grid(display0.grid[display0.active_grid],
-			display0.grid[next_grid]);
+	refresh_grid(clock_display.grid[clock_display.active_grid],
+			clock_display.grid[next_grid]);
 
-	display0.active_grid = next_grid;
+	clock_display.active_grid = next_grid;
 }
+#endif

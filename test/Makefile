@@ -12,7 +12,13 @@ LDFLAGS += -lcheck
 
 VPATH += ./mock/src
 
-TEST_OBJ := avrio.o delay.o main.o 
+TEST_OBJ := main.o \
+	delay.o \
+	avrio.o \
+	display_test.o \
+	bcd_test.o \
+	bcd.o \
+	i2c.o
 
 # Must be recursively expanded for the dependencies rules in include.mk to work
 OBJ = $(TEST_OBJ) $(COMMON_OBJ) 

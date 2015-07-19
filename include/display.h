@@ -65,4 +65,6 @@ void refresh_grid(grid_t *prev_grid, grid_t *grid);
 void grid_on(grid_t *grid);
 void grid_off(grid_t *grid);
 
+void say(display_t *disp, char *what);
+
 #endif

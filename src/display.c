@@ -104,3 +104,36 @@ void grid_off(grid_t *grid)
 	CLEAR_PIN(g_port_state, grid->pin);
 	write_port(grid->port, g_port_state);
 }
+
+void say(display_t *disp, char *what)
+{
+	size_t len = strlen(what);
+	size_t i;
+	uint8_t t;
+	uint8_t g;
+	tubechar_t tc;
+	uint32_t c_data;
+	tube_t *tube;
+
+	for (i = 0; i <= len; ++i) {
+		c_data = 0;
+		for (g = 0; g < disp->grid_len; ++g) {
+			disp->grid[g]->c_data = 0;
+		}
+
+		for (t = 0; t < disp->tube_len; ++t) {
+			if (i + t < len) {
+				if ((tc = to_tubechar(what[i + t])) == -1) {
+					tc = NO_CHAR;
+				}
+			} else {
+				tc = BLANK;
+			}
+
+			tube = disp->tube[t];
+			render_tubechar(&c_data, tube, tc);
+			tube->grid->c_data |= c_data;
+		}
+		_delay_ms(500.0);
+	}
+}

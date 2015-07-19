@@ -1,6 +1,7 @@
 COMMON_OBJ := display.o \
 	tubechars.o \
-	clock.o
+	clock.o \
+	bcd.o
 
 # Add the common source directory to VPATH
 VPATH += $(DEPTH)/src
@@ -15,3 +16,5 @@ include $(OBJ:.o=.d)
 %.d: %.c
 	$(CC) $(CPPFLAGS) -MM -MG $^ | sed -e 's@\(.*\)\.o:@\1.d \1.o:@' >$@
 
+.PHONY: dep_clean
+	-rm *.d

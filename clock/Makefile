@@ -18,7 +18,7 @@ CFLAGS += -O1 -DF_CPU=8000000UL -mmcu=$(MCU) -g
 LDFLAGS += -O1 -mmcu=$(MCU)
 
 # Clock-specific object files.
-CLOCK_OBJ := main.o
+CLOCK_OBJ := main.o i2c.o DS1307.o
 
 # All of the object files for the clock.  Must be recursively expanded because
 # $(COMMON_OBJ) is defined in include.mk, which is included below.

@@ -1,11 +1,13 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <util/delay.h>
+#include <util/twi.h>
 #include <string.h>
 
 #include "clock.h"
 #include "display.h"
 #include "tubechars.h"
+#include "DS1307.h"
 
 void ioinit (void)
 {
@@ -46,20 +48,28 @@ void count()
 	}
 }
 
-void say(char *what)
+void show_byte(uint8_t b)
 {
-	size_t len = strlen(what);
-	size_t i;
-	tubechar_t tc;
+	char disp[3];
+	uint8_t n;
 
-	for (i = 0; i < len; ++i) {
-		if ((tc = to_tubechar(what[i])) == -1) {
-			continue;
-		}
-		tube0.grid->c_data = 0;
-		render_tubechar(&tube0.grid->c_data, &tube0, tc);
-		_delay_ms(1000.0);
+	disp[2] = 0;
+
+	n = b & 0xf;
+	if (n < 10) {
+		disp[1] = '0' + n;
+	} else {
+		disp[1] = 'a' + n - 10;
 	}
+		
+	n = (b >> 4)  & 0xf;
+	if (n < 10) {
+		disp[0] = '0' + n;
+	} else {
+		disp[0] = 'a' + n - 10;
+	}
+
+	say(&clock_display, disp);
 }
 
 int main()
@@ -67,15 +77,30 @@ int main()
 	clock_init();
 	ioinit();
 	sei();
-	send_controller(&controller0, 0);
 
-	say("Hello World");
-	grid0.c_data = 0;
+	uint8_t before, after;
+	uint8_t cr = 0x10;
 
-	_delay_ms(1000.0);
+	if (!DS1307_is_enabled()) {
+		DS1307_enable();
+	}
 
-	count();
-	grid0.c_data = 0;
+	DS1307_get_CR(&before);
+	DS1307_set_CR(&cr);
+	DS1307_get_CR(&after);
+
+	/*
+	DS1307_read_time();
+	DS1307_read_time();
+	DS1307_write_time(2015, 7, 7, 2, );
+	*/
+
+	show_byte(before);
+	show_byte(after);
+	/*
+	_delay_ms(5000.0);
+	DS1307_disable();
+	*/
 
 	for(;;) {
 		PORTC = 0xFF;
