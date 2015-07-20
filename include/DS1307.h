@@ -45,7 +45,11 @@ typedef struct DS1307_tm {
 	/*
 	 * The DS1307 uses the range [1,7] to represent weekdays rather than [0,6]
 	 * for the standard struct tm.  This field should be used per the standard.
-	 * DS1307_read_time and DS1307_write_time will handle the conversion.
+	 * DS1307_to_raw_time and DS1307_from_raw_time will handle the conversion.
+	 *
+	 * DS1307_read_time and DS1307_write_time call DS1307_from/to_raw_time and
+	 * callers of those functions should use tm_wday as they would for a
+	 * standard struct tm.
 	 */
 	int8_t tm_wday;
 	int8_t tm_mon;
@@ -88,16 +92,16 @@ uint8_t DS1307_write(uint8_t *data, uint8_t addr, uint8_t len);
 /*
  * High level routines to set and get the time in human readable format.
  */
-uint8_t DS1307_read_time(uint16_t century, DS1307_tm_t *tm);
-uint8_t DS1307_write_time(uint16_t century, DS1307_tm_t *tm);
+uint8_t DS1307_read_time(int16_t century, DS1307_tm_t *tm);
+uint8_t DS1307_write_time(int16_t century, DS1307_tm_t *tm);
 
 /*
  * Functions to convert between the raw time data the DS1307 sends/receives and
  * human readable format.
  */
-void DS1307_to_raw_time(uint8_t raw_time[7], uint16_t century,
+void DS1307_to_raw_time(uint8_t raw_time[7], int16_t century,
 		DS1307_tm_t *tm);
-void DS1307_from_raw_time(uint16_t century, DS1307_tm_t *tm,
+void DS1307_from_raw_time(int16_t century, DS1307_tm_t *tm,
 		uint8_t raw_time[7]);
 
 #endif

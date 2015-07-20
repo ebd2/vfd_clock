@@ -79,7 +79,7 @@ out:
 	return status;
 }
 
-uint8_t DS1307_read_time(uint16_t century, DS1307_tm_t *tm)
+uint8_t DS1307_read_time(int16_t century, DS1307_tm_t *tm)
 {
 	uint8_t status;
 	uint8_t time[7];
@@ -93,7 +93,7 @@ out:
 	return status;
 }
 
-uint8_t DS1307_write_time(uint16_t century, DS1307_tm_t *tm)
+uint8_t DS1307_write_time(int16_t century, DS1307_tm_t *tm)
 {
 	uint8_t status = 0;
 	uint8_t time[7];
@@ -104,7 +104,7 @@ uint8_t DS1307_write_time(uint16_t century, DS1307_tm_t *tm)
 	return status;
 }
 
-void DS1307_to_raw_time(uint8_t raw_time[7], uint16_t century,
+void DS1307_to_raw_time(uint8_t raw_time[7], int16_t century,
 		DS1307_tm_t *tm)
 {
 	raw_time[0] = to_bcd(tm->tm_sec, 0x7f);
@@ -125,7 +125,7 @@ void DS1307_to_raw_time(uint8_t raw_time[7], uint16_t century,
 	raw_time[6] = to_bcd(tm->tm_year - century * 100, 0xff);
 }	
 
-void DS1307_from_raw_time(uint16_t century, DS1307_tm_t *tm,
+void DS1307_from_raw_time(int16_t century, DS1307_tm_t *tm,
 		uint8_t raw_time[7])
 {
 	uint8_t h;

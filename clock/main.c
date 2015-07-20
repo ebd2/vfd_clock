@@ -77,9 +77,11 @@ int main()
 	clock_init();
 	ioinit();
 	sei();
+	uint8_t i;
 
 	uint8_t before, after;
-	uint8_t cr = 0x10;
+	uint8_t cr = 0x00;
+	uint8_t time[7];
 
 	if (!DS1307_is_enabled()) {
 		DS1307_enable();
@@ -89,23 +91,26 @@ int main()
 	DS1307_set_CR(&cr);
 	DS1307_get_CR(&after);
 
-	/*
-	DS1307_read_time();
-	DS1307_read_time();
-	DS1307_write_time(2015, 7, 7, 2, );
-	*/
+	DS1307_tm_t now = {
+		55,
+		59,
+		23,
+		02,
+		4,
+		7,
+		2015,
+		HOUR_MODE_24,
+		AM,
+	};
 
-	show_byte(before);
-	show_byte(after);
-	/*
-	_delay_ms(5000.0);
-	DS1307_disable();
-	*/
+	DS1307_write_time(20, &now);
 
 	for(;;) {
-		PORTC = 0xFF;
-		_delay_ms(500.0);
-		PORTC = 0x0;
-		_delay_ms(500.0);
+		DS1307_get_time(time);
+		for (i = 0; i < sizeof(time) / sizeof(time[0]); ++i) {
+			show_byte(time[i]);
+		}
+
+		_delay_ms(500);
 	}
 }
